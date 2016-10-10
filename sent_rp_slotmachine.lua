@@ -1,4 +1,4 @@
---[[rp_slotmachine by Foul Play | Version 1.0.1 Pre-Alpha]]
+--[[rp_slotmachine by Foul Play | Version 1.1.0 Pre-Alpha]]
 --[[
 	function() end --A function
 	for() do --A loop
@@ -21,16 +21,24 @@
 ]]
 AddCSLuaFile()
 
+local a = {a = "♥", b = 25} --Slot 1 (a is siring to output on VGUI and b is how much is won on the slot.)
+local b = {a = "♥", b = 50} --Slot 2 (a is siring to output on VGUI and b is how much is won on the slot.)
+local c = {a = "♦", b = 75} --Slot 3 (a is siring to output on VGUI and b is how much is won on the slot.)
+local d = {a = "♦", b = 100} --Slot 4 (a is siring to output on VGUI and b is how much is won on the slot.)
+
+local function Spin()
+end
+
 DEFINE_BASECLASS( "base_anim" )
 
-cleanup.Register( "" ) --Registers for the entity to be cleaned up by Admins and clients.
+cleanup.Register( "SlotMachine" ) --Registers for the entity to be cleaned up by Admins and clients.
 
-ENT.PrintName = "" --The name of the entity in the Spawn Menu.
+ENT.PrintName = "SlotMachine" --The name of the entity in the Spawn Menu.
 ENT.Author = "Nathan Binks" --The author of the entity in the Spawn Menu.
-ENT.Information = "" --Information about the entity in the Spawn Menu.
-ENT.Category = "" --The Category where its going to be stored in the Spawn Menu.
+ENT.Information = "A spawnable slot machine" --Information about the entity in the Spawn Menu.
+ENT.Category = "rp_slotmachine" --The Category where its going to be stored in the Spawn Menu.
 ENT.Spawnable = true --Makes it Spawnable by Clients.
-ENT.AdminOnly = false --Make it so non-admins can spawn it in.
+ENT.AdminOnly = true --Make it so non-admins can spawn it in.
 ENT.RenderGroup = RENDERGROUP_TRANSLUCENT --TODO: Add information about what it does.
 
 function ENT:SetupDataTables()
@@ -49,13 +57,14 @@ function ENT:SpawnFunction( ply, tr, ClassName )
 	ent:Activate() --Activate the entity.
 	ent:PhysWake() --Makes the entity fall to the ground.
 
-	ply:AddCleanup( "", ent ) --Adds the entity that the client has spawn to their cleanup menu in Spawn Menu.
+	ply:AddCleanup( "SlotMachine", ent ) --Adds the entity that the client has spawn to their cleanup menu in Spawn Menu.
 
 	return ent --Return the entity.
 end
 
 function ENT:Initialize()
-	self:SetModel( "" ) --Set the model ingame.
+	self:SetModel( "models/props_combine/combine_intmonitor003.mdl" ) --Set the model ingame.
+	self:SetSkin(1) --Set the skin ingame.
 
 	--Enables Physics on Client.
 	self:SetMoveType( MOVETYPE_VPHYSICS )
@@ -79,9 +88,26 @@ end
 --https://github.com/garrynewman/garrysmod/blob/master/garrysmod/lua/entities/sent_ball.lua#L149
 if ( SERVER ) then return end -- We do NOT want to execute anything below in this FILE on SERVER 
 
-language.Add( "Cleanup_", "" ) --Sets what it says in the cleanup menu in the Spawn Menu.
-language.Add( "Cleaned_", "" ) --Sets what it says when the entity gets cleaned.
+language.Add( "Cleanup_SlotMachine", "SlotMachine" ) --Sets what it says in the cleanup menu in the Spawn Menu.
+language.Add( "Cleaned_SlotMachine", "SlotMachine(s)" ) --Sets what it says when the entity gets cleaned.
+
+local e, f, g, h = 0, 0, 0, 0 --To be used later.
 
 function ENT:Draw()
-	self:DrawModel() --Drawing the model
+	self:DrawModel() --Draw the model.
+
+	local i = self:GetPos() --Get the position of the entity.
+	local j = self:GetAngles() --Get the angles of the entity.
+	j:RotateAroundAxis(j:Right(), -90) --Rotate the angle in degrees (Vector, number (rotation))
+	j:RotateAroundAxis(j:Up(), 90) --Rotate the angle in degrees (Vector, number (rotation))
+
+	--We use this on Client because it draws anything in 2D to 3D on the prop on the Client's screen.
+	cam.Start3D2D(i + j:Up() * 10, j, 1) --(position, angle, scale)
+		surface.SetDrawColor( Color( 0, 0, 0, 255 ) ) --Set draw colour before drawing a shape. ()
+		surface.DrawRect( 0, 0, 100, 100 ) --Draw a rectangle. (position x, position y, size x, size y)
+
+		surface.SetTextColor( 255, 255, 255, 255 ) --Set the text colour before drawing the text.
+		surface.SetTextPos( 0, 0 ) --Set the text position before
+		surface.DrawText( "Hello World" ) --Draw the text.
+	cam.End3D2D()
 end
