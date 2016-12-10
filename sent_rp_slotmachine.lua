@@ -1,4 +1,4 @@
---[[rp_slotmachine by Foul Play | Version 1.1.1 Pre-Alpha]]
+--[[rp_slotmachine by Foul Play | Version 1.3.1 Pre-Alpha]]
 --[[
 	function() end --A function
 	for() do --A loop
@@ -21,25 +21,79 @@
 ]]
 AddCSLuaFile()
 
-local a = {a = {a = "♥", b = 25}, b = {a = "♣", b = 50}, c = {a = "♦", b = 100}} --a is siring to output on VGUI and b is how much is won on the slot.
+local bWinChance = 10 --Win chance number. Modify this for a higher or lower chance of winning
+
+local aSlot1String = "♥"
+local aSlot2String = "♣"
+local aSlot3String = "♦"
+local aSlot1WinAmount = 25
+local aSlot2WinAmount = 50
+local aSlot3WinAmount = 100
+
+--a is siring to output on VGUI and b is how much is won on the slot.
+local aTbl = {a = {a = aSlot1String, b = aSlot1WinAmount}, b = {a = aSlot2String, b = aSlot2WinAmount}, c = {a = aSlot3String, b = aSlot3WinAmount}}
 
 --Checks if the player has won anything
 local function Check(a, b, c)
 	--[[If Slot 1 is the same as Slot 2 and Slot 2 is the same as Slot 3 then
-	The player has won money.
-	Else they lost the roll and have not won any moeny.]]
+	the player has won money else they lost the roll and have not won any money.]]
 	if (a == b and b == c) then
-		print("You have won " .. a.b .. "!")
+		print("You have won " .. tostring(a.b) .. "!")
 	else
 		print("Oh oh, you have lost...")
 	end
 end
 
+--Generate a win for the player.
+local function GenerateWin()
+	--Randomly select a key then send it to the Check function.
+	local a = table.Random(aTbl)
+	print("[GenerateWin]: Sending " .. a.a .. " " .. a.a .. " " .. a.a )
+	Check(a, a, a)
+end
+
+--Generate a loose for the player
+local function GenerateLoose()
+	--Randomly select a key and send it to the check function.
+	local a, b, c = table.Random(aTbl), table.Random(aTbl), table.Random(aTbl)
+	--If all of them are the same then get a key and change it to another key.
+	if (a == b and b == c) then
+		if (a == 1) then
+			a = a + 1
+			print("[GenerateLoose]: Sending " .. tostring(a.a) .. " " .. tostring(b.a) .. " " .. tostring(c.a) )
+			Check(a, b, c)
+		end
+		if (a == 2) then
+			b = b - 1
+			print("[GenerateLoose]: Sending " .. tostring(a.a) .. " " .. tostring(b.a) .. " " .. tostring(c.a) )
+			Check(a, b, c)
+		end
+		if (a == 3) then
+			c = c - 2
+			print("[GenerateLoose]: Sending " .. tostring(a.a) .. " " .. tostring(b.a) .. " " .. tostring(c.a) )
+			Check(a, b, c)
+		end
+	end
+	print("[GenerateLoose]: Sending " .. tostring(a.a) .. " " .. tostring(b.a) .. " " .. tostring(c.a) )
+	Check(a, b, c) --Send the keys to the function
+end
+
 --Rolls the slots.
 local function Roll()
-	local b, c, d = table.Random(a), table.Random(a), table.Random(a)
-	print("Slot 1 String Output: " .. b.a, "Slot 2 String Output: " .. c.a, "Slot 3 String Output: " .. d.a)
-	Check(b, c, d)
+	--Vars for table outputs and to send to the Check function.
+	--local b, c, d = table.Random(a), table.Random(a), table.Random(a)
+	--print("Slot 1 String Output: " .. b.a, "Slot 2 String Output: " .. c.a, "Slot 3 String Output: " .. d.a)
+	--Check(b, c, d)
+	
+	--[[Win chance and math random to generate a number to compare it to the win chance
+	then if random number is less or equals to the win chance then the player has won
+	else the player has lost.]]
+	local a, b = bWinChance, math.random(100) 
+	if (b <= a) then
+		GenerateWin()
+		else
+		GenerateLoose()
+	end
 end
 
 DEFINE_BASECLASS( "base_anim" )
