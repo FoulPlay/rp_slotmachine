@@ -1,4 +1,4 @@
---[[rp_slotmachine by Foul Play | Version 1.1.0 Pre-Alpha]]
+--[[rp_slotmachine by Foul Play | Version 1.1.1 Pre-Alpha]]
 --[[
 	function() end --A function
 	for() do --A loop
@@ -21,12 +21,9 @@
 ]]
 AddCSLuaFile()
 
-local a = {a = "♥", b = 25} --Slot 1 (a is siring to output on VGUI and b is how much is won on the slot.)
-local b = {a = "♥", b = 50} --Slot 2 (a is siring to output on VGUI and b is how much is won on the slot.)
-local c = {a = "♦", b = 75} --Slot 3 (a is siring to output on VGUI and b is how much is won on the slot.)
-local d = {a = "♦", b = 100} --Slot 4 (a is siring to output on VGUI and b is how much is won on the slot.)
+local a = {a = {a = "♥", b = 25}, b = {a = "♣", b = 50}, c = {a = "♦", b = 25}} --a is siring to output on VGUI and b is how much is won on the slot.
 
-local function Spin()
+local function Roll()
 end
 
 DEFINE_BASECLASS( "base_anim" )
