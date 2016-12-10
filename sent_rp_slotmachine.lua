@@ -21,9 +21,25 @@
 ]]
 AddCSLuaFile()
 
-local a = {a = {a = "♥", b = 25}, b = {a = "♣", b = 50}, c = {a = "♦", b = 25}} --a is siring to output on VGUI and b is how much is won on the slot.
+local a = {a = {a = "♥", b = 25}, b = {a = "♣", b = 50}, c = {a = "♦", b = 100}} --a is siring to output on VGUI and b is how much is won on the slot.
 
+--Checks if the player has won anything
+local function Check(a, b, c)
+	--[[If Slot 1 is the same as Slot 2 and Slot 2 is the same as Slot 3 then
+	The player has won money.
+	Else they lost the roll and have not won any moeny.]]
+	if (a == b and b == c) then
+		print("You have won " .. a.b .. "!")
+	else
+		print("Oh oh, you have lost...")
+	end
+end
+
+--Rolls the slots.
 local function Roll()
+	local b, c, d = table.Random(a), table.Random(a), table.Random(a)
+	print("Slot 1 String Output: " .. b.a, "Slot 2 String Output: " .. c.a, "Slot 3 String Output: " .. d.a)
+	Check(b, c, d)
 end
 
 DEFINE_BASECLASS( "base_anim" )
@@ -53,6 +69,7 @@ function ENT:SpawnFunction( ply, tr, ClassName )
 	ent:Spawn() --Spawn the entity.
 	ent:Activate() --Activate the entity.
 	ent:PhysWake() --Makes the entity fall to the ground.
+	ent:SetUseType( SIMPLE_USE ) --Use only fires once everytime used key pressed on the entity.
 
 	ply:AddCleanup( "SlotMachine", ent ) --Adds the entity that the client has spawn to their cleanup menu in Spawn Menu.
 
@@ -60,7 +77,7 @@ function ENT:SpawnFunction( ply, tr, ClassName )
 end
 
 function ENT:Initialize()
-	self:SetModel( "models/props_combine/combine_intmonitor003.mdl" ) --Set the model ingame.
+	self:SetModel( "models/props_lab/monitor01a.mdl" ) --Set the model ingame.
 	self:SetSkin(1) --Set the skin ingame.
 
 	--Enables Physics on Client.
@@ -75,7 +92,7 @@ end
 
 --Since we won't be using the entity for anything yet, make Use return nothing and do nothing.
 function ENT:Use()
-	return
+	Roll()
 end
 
 --Call this function when the entity gets removed.
