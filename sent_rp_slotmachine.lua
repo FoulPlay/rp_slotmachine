@@ -1,4 +1,4 @@
---[[rp_slotmachine by Foul Play | Version 1.3.1 Pre-Alpha]]
+--[[rp_slotmachine by Foul Play | Version 1.4.2 Pre-Alpha]]
 --[[
 	function() end --A function
 	for() do --A loop
@@ -31,13 +31,13 @@ local aSlot2WinAmount = 50 --Modify this what the Slot 2 win amount will be.
 local aSlot3WinAmount = 100 --Modify this what the Slot 3 win amount will be.
 
 --a is siring to output on VGUI and b is how much is won on the slot.
-local aTbl = {a = {a = aSlot1String, b = aSlot1WinAmount}, b = {a = aSlot2String, b = aSlot2WinAmount}, c = {a = aSlot3String, b = aSlot3WinAmount}}
+local aTbl = { a = { a = aSlot1String, b = aSlot1WinAmount }, b = { a = aSlot2String, b = aSlot2WinAmount }, c = { a = aSlot3String, b = aSlot3WinAmount } }
 
 --Checks if the player has won anything
-local function Check(a, b, c)
+local function Check( a, b, c )
 	--[[If Slot 1 is the same as Slot 2 and Slot 2 is the same as Slot 3 then
 	the player has won money else they lost the roll and have not won any money.]]
-	if (a == b and b == c) then
+	if ( a == b and b == c ) then
 		print("You have won " .. tostring(a.b) .. "!")
 	else
 		print("Oh oh, you have lost...")
@@ -47,35 +47,35 @@ end
 --Generate a win for the player.
 local function GenerateWin()
 	--Randomly select a key then send it to the Check function.
-	local a = table.Random(aTbl)
-	print("[GenerateWin]: Sending " .. a.a .. " " .. a.a .. " " .. a.a )
-	Check(a, a, a)
+	local a = table.Random( aTbl )
+	print( "[GenerateWin]: Sending " .. a.a .. " " .. a.a .. " " .. a.a )
+	Check( a, a, a )
 end
 
 --Generate a loose for the player
 local function GenerateLoose()
 	--Randomly select a key and send it to the check function.
-	local a, b, c = table.Random(aTbl), table.Random(aTbl), table.Random(aTbl)
+	local a, b, c = table.Random( aTbl ), table.Random( aTbl ), table.Random( aTbl )
 	--If all of them are the same then get a key and change it to another key.
-	if (a == b and b == c) then
-		if (a == 1) then
+	if ( a == b and b == c ) then
+		if ( a == 1 ) then
 			a = a + 1
-			print("[GenerateLoose]: Sending " .. tostring(a.a) .. " " .. tostring(b.a) .. " " .. tostring(c.a) )
-			Check(a, b, c)
+			print( "[GenerateLoose]: Sending " .. a.a .. " " .. b.a .. " " .. c.a )
+			Check( a, b, c )
 		end
-		if (a == 2) then
+		if ( a == 2 ) then
 			b = b - 1
-			print("[GenerateLoose]: Sending " .. tostring(a.a) .. " " .. tostring(b.a) .. " " .. tostring(c.a) )
-			Check(a, b, c)
+			print( "[GenerateLoose]: Sending " .. a.a .. " " .. b.a .. " " .. c.a )
+			Check( a, b, c )
 		end
-		if (a == 3) then
+		if ( a == 3 ) then
 			c = c - 2
-			print("[GenerateLoose]: Sending " .. tostring(a.a) .. " " .. tostring(b.a) .. " " .. tostring(c.a) )
-			Check(a, b, c)
+			print( "[GenerateLoose]: Sending " .. a.a .. " " .. b.a .. " " .. c.a )
+			Check( a, b, c )
 		end
 	end
-	print("[GenerateLoose]: Sending " .. tostring(a.a) .. " " .. tostring(b.a) .. " " .. tostring(c.a) )
-	Check(a, b, c) --Send the keys to the function
+	print( "[GenerateLoose]: Sending " .. a.a .. " " .. b.a .. " " .. c.a )
+	Check( a, b, c ) --Send the keys to the function
 end
 
 --Rolls the slots.
@@ -89,9 +89,9 @@ local function Roll()
 	then if random number is less or equals to the win chance then the player has won
 	else the player has lost.]]
 	local a, b = bWinChance, math.random(100) 
-	if (b <= a) then
+	if ( b <= a ) then
 		GenerateWin()
-		else
+	else
 		GenerateLoose()
 	end
 end
@@ -156,12 +156,12 @@ end
 --https://github.com/garrynewman/garrysmod/blob/master/garrysmod/lua/entities/sent_ball.lua#L149
 if ( SERVER ) then return end -- We do NOT want to execute anything below in this FILE on SERVER 
 
-surface.CreateFont( "rp_slotmachine_font",{
+surface.CreateFont( "rp_slotmachine_font1", {
 	font = "Arial",
 	size = 15,
 	antialias = true,
 	weight = 1000,
-})
+} )
 
 
 language.Add( "Cleanup_SlotMachine", "SlotMachine" ) --Sets what it says in the cleanup menu in the Spawn Menu.
@@ -170,19 +170,19 @@ language.Add( "Cleaned_SlotMachine", "SlotMachine(s)" ) --Sets what it says when
 function ENT:Draw()
 	self:DrawModel() --Draw the model.
 
-	local i = self:GetPos() --Get the position of the entity.
-	local j = self:GetAngles() --Get the angles of the entity.
-	j:RotateAroundAxis(j:Right(), -85.5) --Rotate the angle in degrees (Vector, number (rotation))
-	j:RotateAroundAxis(j:Up(), 90) --Rotate the angle in degrees (Vector, number (rotation))
+	local a = self:GetPos() --Get the position of the entity.
+	local b = self:GetAngles() --Get the angles of the entity.
+	b:RotateAroundAxis( b:Right(), -85.5 ) --Rotate the angle in degrees (Vector, number (rotation))
+	b:RotateAroundAxis( b:Up(), 90 ) --Rotate the angle in degrees (Vector, number (rotation))
 
 	--We use this on Client because it draws anything in 2D to 3D on the prop on the Client's screen.
-	cam.Start3D2D(i + j:Up() * 12.6, j, 0.11) --(position, angle, scale)
+	cam.Start3D2D( a + b:Up() * 12.6, b, 0.11 ) --(position, angle, scale)
 		surface.SetDrawColor( Color( 0, 0, 0, 255 ) ) --Set draw colour before drawing a shape. ()
 		surface.DrawRect( -90, -100, 180, 150 ) --Draw a rectangle. (position x, position y, size x, size y)
 
 		--[[Draw the text at the top of the VGUI (String text to be displade, font to be used, position x, 
 		position, y, colour of text, the alignment of the text)]]
-		draw.DrawText("RP Slot Machine", "rp_slotmachine_font", 0, -100, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
+		draw.DrawText( "RP Slot Machine", "rp_slotmachine_font1", 0, -100, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER )
 		
 		--Rectangle left
 		surface.SetDrawColor( Color( 255, 255, 255, 255 ) ) --Set the colour before drawing the rectangle.
