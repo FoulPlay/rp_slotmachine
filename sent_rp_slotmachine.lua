@@ -21,14 +21,14 @@
 ]]
 AddCSLuaFile()
 
-local bWinChance = 10 --Win chance number. Modify this for a higher or lower chance of winning
+local bWinChance = 10 --Win chance number. Modify this for a higher or lower chance of winning.
 
-local aSlot1String = "♥"
-local aSlot2String = "♣"
-local aSlot3String = "♦"
-local aSlot1WinAmount = 25
-local aSlot2WinAmount = 50
-local aSlot3WinAmount = 100
+local aSlot1String = "♥" --Modify this to change what's going to be outputted on the VGUI.
+local aSlot2String = "♣" --Modify this to change what's going to be outputted on the VGUI.
+local aSlot3String = "♦" --Modify this to change what's going to be outputted on the VGUI.
+local aSlot1WinAmount = 25 --Modify this what the Slot 1 win amount will be.
+local aSlot2WinAmount = 50 --Modify this what the Slot 2 win amount will be.
+local aSlot3WinAmount = 100 --Modify this what the Slot 3 win amount will be.
 
 --a is siring to output on VGUI and b is how much is won on the slot.
 local aTbl = {a = {a = aSlot1String, b = aSlot1WinAmount}, b = {a = aSlot2String, b = aSlot2WinAmount}, c = {a = aSlot3String, b = aSlot3WinAmount}}
@@ -156,26 +156,44 @@ end
 --https://github.com/garrynewman/garrysmod/blob/master/garrysmod/lua/entities/sent_ball.lua#L149
 if ( SERVER ) then return end -- We do NOT want to execute anything below in this FILE on SERVER 
 
+surface.CreateFont( "rp_slotmachine_font",{
+	font = "Arial",
+	size = 15,
+	antialias = true,
+	weight = 1000,
+})
+
+
 language.Add( "Cleanup_SlotMachine", "SlotMachine" ) --Sets what it says in the cleanup menu in the Spawn Menu.
 language.Add( "Cleaned_SlotMachine", "SlotMachine(s)" ) --Sets what it says when the entity gets cleaned.
-
-local e, f, g, h = 0, 0, 0, 0 --To be used later.
 
 function ENT:Draw()
 	self:DrawModel() --Draw the model.
 
 	local i = self:GetPos() --Get the position of the entity.
 	local j = self:GetAngles() --Get the angles of the entity.
-	j:RotateAroundAxis(j:Right(), -90) --Rotate the angle in degrees (Vector, number (rotation))
+	j:RotateAroundAxis(j:Right(), -85.5) --Rotate the angle in degrees (Vector, number (rotation))
 	j:RotateAroundAxis(j:Up(), 90) --Rotate the angle in degrees (Vector, number (rotation))
 
 	--We use this on Client because it draws anything in 2D to 3D on the prop on the Client's screen.
-	cam.Start3D2D(i + j:Up() * 10, j, 1) --(position, angle, scale)
+	cam.Start3D2D(i + j:Up() * 12.6, j, 0.11) --(position, angle, scale)
 		surface.SetDrawColor( Color( 0, 0, 0, 255 ) ) --Set draw colour before drawing a shape. ()
-		surface.DrawRect( 0, 0, 100, 100 ) --Draw a rectangle. (position x, position y, size x, size y)
+		surface.DrawRect( -90, -100, 180, 150 ) --Draw a rectangle. (position x, position y, size x, size y)
 
-		surface.SetTextColor( 255, 255, 255, 255 ) --Set the text colour before drawing the text.
-		surface.SetTextPos( 0, 0 ) --Set the text position before
-		surface.DrawText( "Hello World" ) --Draw the text.
+		--[[Draw the text at the top of the VGUI (String text to be displade, font to be used, position x, 
+		position, y, colour of text, the alignment of the text)]]
+		draw.DrawText("RP Slot Machine", "rp_slotmachine_font", 0, -100, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
+		
+		--Rectangle left
+		surface.SetDrawColor( Color( 255, 255, 255, 255 ) ) --Set the colour before drawing the rectangle.
+		surface.DrawOutlinedRect( -75, -30, 50, 50 ) --Draw the rectangle (position x, position y, size, x, size, y)
+		
+		--Rectangle middle
+		surface.SetDrawColor( Color( 255, 255, 255, 255 ) ) --Set the colour before drawing the rectangle.
+		surface.DrawOutlinedRect( -25, -30, 50, 50 ) --Draw the rectangle (position x, position y, size, x, size, y)
+		
+		--Rectangle right
+		surface.SetDrawColor( Color( 255, 255, 255, 255 ) ) --Set the colour before drawing the rectangle.
+		surface.DrawOutlinedRect( 25, -30, 50, 50 ) --Draw the rectangle (position x, position y, size, x, size, y)
 	cam.End3D2D()
 end
